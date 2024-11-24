@@ -1,0 +1,209 @@
+// import 'dart:io'; // For file I/O
+// import 'dart:typed_data'; // For handling binary data
+// import 'package:flutter/material.dart';
+// import 'package:path_provider/path_provider.dart'; // For saving files locally
+// import 'package:signature/signature.dart'; // Signature package
+// import 'package:google_fonts/google_fonts.dart'; // Custom fonts
+//
+// class SignaturePad extends StatefulWidget {
+//   @override
+//   _SignaturePadState createState() => _SignaturePadState();
+// }
+//
+// class _SignaturePadState extends State<SignaturePad> {
+//   SignatureController _controller = SignatureController(
+//     penStrokeWidth: 3,
+//     penColor: Colors.black,
+//     exportBackgroundColor: Colors.white,
+//   );
+//
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
+//
+//   // Function to save the signature as an image
+//   Future<void> _saveSignature() async {
+//     if (_controller.isNotEmpty) {
+//       try {
+//         // Export signature as Uint8List
+//         Uint8List? data = await _controller.toPngBytes();
+//
+//         if (data != null) {
+//           // Get the directory to save the image
+//           final directory = await getApplicationDocumentsDirectory();
+//           final path = '${directory.path}/signature.png';
+//           final file = File(path);
+//
+//           // Write the file
+//           await file.writeAsBytes(data);
+//
+//           // Show a confirmation message
+//           ScaffoldMessenger.of(context).showSnackBar(
+//             SnackBar(content: Text('Signature saved to $path')),
+//           );
+//           print('Signechur Path==>${path}');
+//         } else {
+//           ScaffoldMessenger.of(context).showSnackBar(
+//             SnackBar(content: Text('No signature to save!')),
+//           );
+//         }
+//       } catch (e) {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text('Error saving signature: $e')),
+//         );
+//       }
+//     } else {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('No signature to save!')),
+//       );
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Container(
+//             height: 142,
+//             width: 328,
+//             child: Stack(
+//               children: [
+//                 Signature(
+//                   controller: _controller,
+//                   backgroundColor: Colors.transparent,
+//                   height: 142,
+//                   width: 328,
+//                 ),
+//               ],
+//             ),
+//           ),
+//           SizedBox(height: 10),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               ElevatedButton.icon(
+//                 onPressed: () {
+//                   _controller.clear(); // Clear the signature
+//                 },
+//                 icon: Icon(Icons.clear, color: Colors.white),
+//                 label: Text(
+//                   'Remove',
+//                   style: GoogleFonts.poppins(
+//                     fontSize: 12,
+//                     fontWeight: FontWeight.w600,
+//                   ),
+//                 ),
+//                 style: ElevatedButton.styleFrom(
+//                   backgroundColor: Colors.red,
+//                 ),
+//               ),
+//               SizedBox(width: 20),
+//               ElevatedButton.icon(
+//                 onPressed: _saveSignature, // Call the save function
+//                 icon: Icon(Icons.save, color: Colors.white),
+//                 label: Text(
+//                   'Save',
+//                   style: GoogleFonts.poppins(
+//                     fontSize: 12,
+//                     fontWeight: FontWeight.w600,
+//                   ),
+//                 ),
+//                 style: ElevatedButton.styleFrom(
+//                   backgroundColor: Colors.green,
+//                 ),
+//               ),
+//             ],
+//           ),
+//
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+//
+//
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:signature/signature.dart';
+
+class Demo extends StatefulWidget {
+  const Demo({super.key});
+
+  @override
+  State<Demo> createState() => _DemoState();
+}
+
+class _DemoState extends State<Demo> {
+
+  SignatureController signatureController=SignatureController(
+    penColor: Colors.black,
+    exportBackgroundColor: Colors.white,
+    penStrokeWidth: 5,
+  );
+
+  void dispose(){
+    signatureController.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Container(
+                height: 300,
+                width: 300,
+                decoration: BoxDecoration(
+                  color: CupertinoColors.extraLightBackgroundGray,
+                  borderRadius: BorderRadius.circular(20)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Column(
+                        children: [
+                          Signature(
+                              controller: signatureController,
+                              width: 240,
+                              height: 240,
+                              backgroundColor: Colors.transparent,
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                           GestureDetector(
+                             onTap: () {
+                               dispose();
+                             },
+                             child:  Icon(Icons.clear,color: Colors.red,),
+                           ),
+                            Icon(Icons.save_alt,color: Colors.green,)
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+      ),
+    );
+  }
+}
+
+
